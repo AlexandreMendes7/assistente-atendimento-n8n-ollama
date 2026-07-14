@@ -1,0 +1,170 @@
+{
+  "name": "Assistente Inteligente de Atendimento OdontoFlow - n8n + Ollama",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "atendimento",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "b1a1a111-1111-4111-8111-111111111111",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "assistente-atendimento"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "model",
+              "value": "llama3.1:8b",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "systemPrompt",
+              "value": "Você é a recepcionista virtual de uma clínica odontológica. Responda sempre de forma educada, acolhedora, profissional e objetiva. Ajude os pacientes com dúvidas sobre horários, tratamentos, valores, convênios, localização e agendamento de consultas. Use APENAS as informações fornecidas no contexto da clínica. Nunca invente informações, valores ou diagnósticos. Nunca dê orientação clínica ou de saúde; oriente o paciente a agendar uma avaliação com o dentista. Caso não saiba a resposta, informe que um atendente humano irá auxiliar. Responda em português do Brasil, em no máximo 3 frases.",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "baseConhecimento",
+              "value": "Clínica: OdontoFlow - Odontologia\n\nHorário de atendimento:\nSegunda a sexta, das 08:00 às 19:00.\nSábado, das 08:00 às 13:00.\nDomingos e feriados: fechado.\n\nTratamentos oferecidos:\n- Avaliação e consulta\n- Limpeza e profilaxia\n- Clareamento dental\n- Restaurações (obturações)\n- Tratamento de canal\n- Extrações\n- Ortodontia (aparelho fixo e alinhadores)\n- Implantes e próteses\n- Odontopediatria (atendimento infantil)\n\nValores:\n- Avaliação inicial: gratuita\n- Limpeza: a partir de R$ 120\n- Clareamento: a partir de R$ 600\nOutros tratamentos têm o valor definido após a avaliação com o dentista.\n\nConvênios e pagamento:\n- Atendemos os principais convênios odontológicos (confirmar na recepção)\n- Pix, cartão (crédito e débito, parcelamos em até 6x) e dinheiro\n\nEndereço:\nRua das Flores, 250 - Sala 12 - Centro, Rio de Janeiro/RJ\n\nTelefone e WhatsApp:\n(21) 99999-9999\n\nAgendamento:\nConsultas e avaliações são agendadas pela recepção. Solicitações de agendamento são encaminhadas para um atendente humano pelo WhatsApp.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c2b2b222-2222-4222-8222-222222222222",
+      "name": "Base de Conhecimento",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"model\": $json.model,\n  \"system\": $json.systemPrompt,\n  \"prompt\": \"Informações da empresa:\\n\" + $json.baseConhecimento + \"\\n\\nPergunta do cliente: \" + $('Webhook').item.json.body.mensagem,\n  \"stream\": false,\n  \"options\": { \"temperature\": 0.3 }\n} }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "d3c3c333-3333-4333-8333-333333333333",
+      "name": "Ollama",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrai e limpa a resposta gerada pelo Ollama\nconst dados = $input.first().json;\nconst resposta = (dados.response || '').trim();\n\nif (!resposta) {\n  return [{ json: { resposta: 'Desculpe, no momento não consegui processar sua mensagem. Um atendente humano irá auxiliar em breve.' } }];\n}\n\nreturn [{ json: { resposta } }];"
+      },
+      "id": "e4d4d444-4444-4444-8444-444444444444",
+      "name": "Formatar Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"resposta\": $json.resposta } }}",
+        "options": {}
+      },
+      "id": "f5e5e555-5555-4555-8555-555555555555",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Base de Conhecimento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base de Conhecimento": {
+      "main": [
+        [
+          {
+            "node": "Ollama",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama": {
+      "main": [
+        [
+          {
+            "node": "Formatar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Resposta": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": [
+    {
+      "name": "IA"
+    },
+    {
+      "name": "Ollama"
+    },
+    {
+      "name": "Atendimento"
+    }
+  ]
+}

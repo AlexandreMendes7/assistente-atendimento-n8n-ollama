@@ -1,0 +1,11 @@
+# n8n
+.n8n/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Ambiente
+.env
+node_modules/
