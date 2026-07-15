@@ -7,6 +7,8 @@
 ![Llama 3.1](https://img.shields.io/badge/Modelo-llama3.1%3A8b-blue?style=flat-square)
 ![Custo](https://img.shields.io/badge/custo-R%240%2C00-brightgreen?style=flat-square)
 ![Local](https://img.shields.io/badge/execução-100%25%20local-success?style=flat-square)
+[![Licença: MIT](https://img.shields.io/badge/licença-MIT-yellow?style=flat-square)](LICENSE)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Alexandre%20Mendes-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alexandremendesne/)
 
 ---
 
@@ -245,4 +247,10 @@ Para adaptar a outra empresa, edite o nó **Base de Conhecimento** no n8n e alte
 
 ## 📄 Licença
 
-Projeto livre para fins de estudo e portfólio.
+Distribuído sob a licença **MIT** — veja o arquivo [LICENSE](LICENSE). Livre para uso, estudo e adaptação.
+
+---
+
+## 👤 Autor
+
+**Alexandre Mendes** · [LinkedIn](https://www.linkedin.com/in/alexandremendesne/)
