@@ -47,7 +47,7 @@ Este projeto resolve isso com uma **recepcionista virtual inteligente**: o pacie
           ▼
    ┌─────────────┐
    │ HTTP Request│   Envia pergunta + contexto ao Ollama
-   │  (Ollama)   │   → http://localhost:11434/api/generate
+   │  (Ollama)   │   → http://127.0.0.1:11434/api/generate
    └─────────────┘
           │
           ▼

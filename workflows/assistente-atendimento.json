@@ -56,7 +56,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://localhost:11434/api/generate",
+        "url": "http://127.0.0.1:11434/api/generate",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ {\n  \"model\": $json.model,\n  \"system\": $json.systemPrompt,\n  \"prompt\": \"Informações da empresa:\\n\" + $json.baseConhecimento + \"\\n\\nPergunta do cliente: \" + $('Webhook').item.json.body.mensagem,\n  \"stream\": false,\n  \"options\": { \"temperature\": 0.3 }\n} }}",

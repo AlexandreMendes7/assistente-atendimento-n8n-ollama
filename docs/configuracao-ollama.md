@@ -75,5 +75,18 @@ Para usar o `mistral:7b` em vez do `llama3.1:8b`:
 Você pode validar o Ollama isoladamente:
 
 ```bash
-curl http://localhost:11434/api/generate -d "{ \"model\": \"llama3.1:8b\", \"prompt\": \"Diga apenas OK\", \"stream\": false }"
+curl http://127.0.0.1:11434/api/generate -d "{ \"model\": \"llama3.1:8b\", \"prompt\": \"Diga apenas OK\", \"stream\": false }"
 ```
+
+## 7. Solução de problemas
+
+**Erro `ECONNREFUSED ::1:11434` no nó HTTP Request (Windows):**
+No Windows, `localhost` muitas vezes é resolvido para IPv6 (`::1`), mas o Ollama escuta apenas em IPv4 (`127.0.0.1`). Por isso o workflow usa **`http://127.0.0.1:11434/api/generate`** em vez de `localhost`. Se ainda ocorrer, confirme que o Ollama está no ar:
+
+```bash
+curl http://127.0.0.1:11434/api/tags
+```
+
+**Primeira resposta lenta (20–30s):** normal — o modelo é carregado na memória na primeira chamada. As seguintes ficam em ~6–8s (varia conforme a máquina).
+
+**Resposta vazia:** verifique se o modelo do campo `model` (no nó *Base de Conhecimento*) está realmente instalado com `ollama list`.
