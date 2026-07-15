@@ -235,11 +235,11 @@ Para adaptar a outra empresa, edite o nó **Base de Conhecimento** no n8n e alte
 
 ---
 
-## 📸 Imagens do fluxo
+## 📸 Fluxo do projeto
 
-> Após importar o workflow, tire um print do canvas do n8n e salve em `docs/fluxo.png` para exibir aqui:
->
-> `![Fluxo no n8n](docs/fluxo.png)`
+![Fluxo do Assistente OdontoFlow no n8n + Ollama](docs/fluxo.png)
+
+> 💡 Você também pode substituir esta imagem por um print do canvas real do n8n após importar o workflow.
 
 ---
 
